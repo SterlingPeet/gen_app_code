@@ -1,0 +1,135 @@
+##############################################################################
+## GNU Makefile for building UT unit tests
+
+#
+# Supported MAKEFILE targets:
+#   clean - deletes object files, executables, output files, and gcov files
+#   all   - makes utf_test_runner.exe
+#   run   - runs utf_test_runner.exe
+#   gcov  - prints a GCOV coverage report (make all, make run, make gcov)
+#
+# GCOV is disabled by default.  If you are using the source level debugger you will want to
+# disable GCOV.  To enable GCOV you can override the ENABLE_GCOV variable on the command line
+# by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
+#
+
+BUILD_TARGET = cpu5
+APP = _tbdApp_
+
+CFS_MISSION = $(HOME)/AES_workspace
+
+CFS_APP_SRC = $(CFS_MISSION)/prj_apps
+UT_ASSERT_PATH = $(CFS_MISSION)/tools/ut_assert
+
+CFE_PATH  = $(CFS_MISSION)/cfe/fsw/cfe-core
+OSAL_PATH = $(CFS_MISSION)/osal
+PSP_PATH  = $(CFS_MISSION)/psp
+
+#
+# VPATH specifies the search paths for source files outside of the current directory.  Note that
+# all object files will be created in the current directory even if the source file is not in the
+# current directory.
+#
+VPATH := $(CFS_APP_SRC)/$(APP)/fsw/src
+VPATH += $(CFS_APP_SRC)/$(APP)/fsw/tables
+VPATH += $(UT_ASSERT_PATH)/src
+
+#
+# INCLUDES specifies the search paths for include files outside of the current directory.
+# Note that the -I is required.
+#
+INCLUDES := -I.
+INCLUDES += -I..
+INCLUDES += -I../src
+INCLUDES += -I../platform_inc
+INCLUDES += -I../mission_inc
+
+INCLUDES += -I$(UT_ASSERT_PATH)/inc
+
+INCLUDES += -I$(CFS_MISSION)/target_defs/$(BUILD_TARGET)/cfgs
+INCLUDES += -I$(CFS_MISSION)/target_defs/shared/cfgs
+INCLUDES += -I$(CFS_MISSION)/ccdd/include
+INCLUDES += -I$(CFE_PATH)/src/inc
+INCLUDES += -I$(CFE_PATH)/src/es
+INCLUDES += -I$(CFE_PATH)/src/sb
+
+INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config
+
+INCLUDES += -I$(PSP_PATH)/fsw/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
+
+#
+# APP_OBJS specifies flight software object files.
+#
+APP_OBJS :=
+APP_OBJS += $(APP)_app.o
+
+#
+# UT_OBJS specifies unit test object files.
+#
+UT_OBJS :=
+UT_OBJS += ut_osapi_stubs.o
+UT_OBJS += ut_osfileapi_stubs.o
+UT_OBJS += ut_cfe_psp_memutils_stubs.o
+UT_OBJS += ut_cfe_sb_stubs.o
+UT_OBJS += ut_cfe_sb_hooks.o
+UT_OBJS += ut_cfe_es_stubs.o
+UT_OBJS += ut_cfe_es_hooks.o
+UT_OBJS += ut_cfe_evs_stubs.o
+UT_OBJS += ut_cfe_evs_hooks.o
+UT_OBJS += ut_cfe_tbl_stubs.o
+UT_OBJS += ut_cfe_tbl_hooks.o
+UT_OBJS += utassert.o
+UT_OBJS += utlist.o
+UT_OBJS += uttest.o
+UT_OBJS += uttools.o
+UT_OBJS += $(APP)_testcases.o
+UT_OBJS += $(APP)_testrunner.o
+
+###############################################################################
+
+COMPILER=gcc
+LINKER=gcc
+
+#
+# Compiler and Linker Options
+#
+ENABLE_GCOV = TRUE
+ifeq ($(ENABLE_GCOV), TRUE)
+GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
+GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
+endif
+
+WARNINGS = -Wall -Wstrict-prototypes
+DEBUGGER = -g
+
+COPT := $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__ix86_ -DUT_VERBOSE -m32
+COPT += -D_LINUX_OS_
+
+LOPT = -m32 $(GCOV_LOPT) -pthread
+
+###############################################################################
+##  "C" COMPILER RULE
+##
+%.o: %.c
+	$(COMPILER) -c $(COPT) $(INCLUDES) $<
+
+##############################################################################
+
+all: $(APP)_ut
+
+$(APP)_ut :: $(UT_OBJS) $(APP_OBJS)
+	$(LINKER) $(LOPT) $^ -o $(APP)_ut
+
+clean ::
+	rm -f *.o *_ut *.gcda *.gcno *.gcov gmon.out
+
+run :: $(APP)_ut
+	./$(APP)_ut
+
+gcov :: run
+	@gcov -f -b $(APP_OBJS:.o=.gcda)
+
+# end of file
+

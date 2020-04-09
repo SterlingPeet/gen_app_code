@@ -1,0 +1,68 @@
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_cmds </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_dg </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_dd _TBDAPP_ Detailed Design
+
+  <H3> Algorithm </H3> 
+
+  The _TBDAPP_ application runs as a Posix thread on Linux platform and as a task on VxWorks
+  platform.
+
+  Once loaded and invoked by the CFE Executive Service (ES), the application does the
+  followings in the order listed below:
+
+    1. <B>Initializations</B>
+
+          a. Registers its thread/task to the CFE ES. <BR>
+          b. Constructs and registers its event table to the CFE Event Services (EVS). <BR>
+          c. Creates 3 message pipes:
+               - #_TBDAPP__AppData_t.SchPipeId: Scheduling pipe for receiving scheduling messages <BR>
+               - #_TBDAPP__AppData_t.CmdPipeId: Command pipe for receiving command messages <BR>
+               - #_TBDAPP__AppData_t.TlmPipeId: Telemetry pipe for receiving telemetry messages <BR><BR>
+
+          d. Subscribes to the following CCSDS messages as followed:
+               - #_TBDAPP__WAKEUP_MID and #_TBDAPP__SEND_HK_MID on Scheduling pipe. <BR>
+               - #_TBDAPP__CMD_MID on Command pipe. <BR>
+               - Any other applications' OutData telemetry on Telemetry pipe. <BR><BR>
+
+          e. Initializes its local data and messages. <BR>
+
+        If any of the above steps fail, the application will exit after sending a 
+        #_TBDAPP__INIT_ERR_EID Event message.
+
+    2. <B>Main loop</B>
+
+        The application listens for incoming messages from the Scheduling pipe. <BR>
+
+        When in listening mode, there are 2 specific messages the application responds to:
+
+          a. #_TBDAPP__WAKEUP_MID command message<BR>
+
+             This message is typically sent by the SCH application.  Only upon receiving
+             this message can the application start doing any work.  When woken up, 
+             the application first processes all incoming commands.  Next, it processes 
+             all incoming data, performing any necessary data computions. And last, it sends 
+             out its OutData message, #_TBDAPP__OUT_DATA_MID, before going back to the 
+             listening mode. <BR>
+
+             The application's OutData is published once per WakeUp cycle.  It should contain
+             data to be recorded on-board (not downlinked) and data to be consumed by other
+             applications. <BR>
+
+          b. #_TBDAPP__SEND_HK_MID command message<BR>
+
+             This message is also typically sent by the SCH application, but can also be sent
+             from the Ground.  Upon receiving this message, the application sends out its 
+             latest Housekepping data message, #_TBDAPP__HK_TLM_MID, to be downlinked to the Ground 
+             by the TO application. The application then goes back to the listening mode. <BR>
+
+             The application's Housekeeping data is published only upon receiving an
+             #_TBDAPP__SEND_HK_MID message.  It should contain ONLY essential data that 
+             the ground system needs in order to run the mission effectively. <BR>
+
+  <BR>
+**/
+

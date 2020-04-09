@@ -1,0 +1,369 @@
+/**
+  \mainpage _TBDAPP_ Documentation
+    <UL>
+      <LI> \subpage _tbdApp_revhist
+      <LI> \subpage _tbdApp_intro
+      <LI> \subpage _tbdApp_ovr
+      <LI> \subpage _tbdApp_opr
+      <LI> \subpage _tbdApp_reqs
+      <LI> \subpage _tbdApp_dg
+      <LI> \subpage _tbdApp_dd
+      <LI> \subpage _tbdApp_cmds
+      <LI> \subpage _tbdApp_tlms
+      <LI> \subpage _tbdApp_tbls
+      <LI> \subpage _tbdApp_cfgs
+      <LI> \subpage _tbdApp_cons
+      <LI> \subpage _tbdApp_faqs
+      <LI> \subpage _tbdApp__events.h "_TBDAPP_ Event Message Reference"
+    </UL>
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left"> NEXT: \ref _tbdApp_intro </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_revhist _TBDAPP_ Revision History
+
+  <TABLE BORDER="1" CELLPADDING="2" WIDTH="90%">
+  <TR> <TD WIDTH="20%"> <B>Date</B>                 </TD> 
+       <TD WIDTH="20%"> <B>Author</B>               </TD> 
+       <TD WIDTH="50%"> <B>Revision description</B> </TD>
+  <TR> <TD WIDTH="20%"> _tbdDate_        </TD>
+       <TD WIDTH="20%"> _tbdOwner_       </TD> 
+       <TD WIDTH="50%"> Initial revision </TD>
+  <TR> <TD WIDTH="20%"> TBD Date        </TD>  
+       <TD WIDTH="20%"> TBD Author      </TD> 
+       <TD WIDTH="50%"> TBD description </TD>
+  </TABLE><BR>
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_ovr     </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_revhist </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_intro _TBDAPP_ Introduction
+
+  <H3> Scope </H3>
+
+  This document provides a complete specification for the commands and telemetry associated
+  with the _TBDAPP_ application software. <BR> The document is intended primarily 
+  for users of the software: operations personal, test engineers, and maintenance personal. 
+  <BR> The Deployment Guide section is intended for mission developers when deploying and 
+  configuring the _TBDAPP_ application for a flight software build.
+
+  <H3> Applicable Documents </H3>
+
+  <TABLE BORDER="1" CELLPADDING="2" WIDTH="60%">
+  <TR> <TD WIDTH="20%"> <B>Document ID</B>    </TD> 
+       <TD WIDTH="40%"> <B>Document Title</B> </TD>
+  <TR> <TD WIDTH="20%"> TBD DocID                      </TD> 
+       <TD WIDTH="40%"> _TBDAPP_ Requirements Document </TD>
+  <TR> <TD WIDTH="20%"> TBD DocID                </TD> 
+       <TD WIDTH="40%"> _TBDAPP_ Design Document </TD>
+  <TR> <TD WIDTH="20%"> TBD DocID    </TD> 
+       <TD WIDTH="40%"> TBD Document </TD>
+  </TABLE><BR>
+
+  <H3> Acronyms </H3>
+
+  <TABLE BORDER="1" CELLPADDING="2" WIDTH="90%">
+  <TR> <TD WIDTH="10%"> <B>Acronym</B>     </TD> 
+       <TD WIDTH="80%"> <B>Description</B> </TD>
+  <TR> <TD WIDTH="10%"> API                               </TD> 
+       <TD WIDTH="80%"> Application Programming Interface </TD>
+  <TR> <TD WIDTH="10%"> CCSDS                                         </TD>
+       <TD WIDTH="80%"> Consultative Committee for Space Data Systems </TD>
+  <TR> <TD WIDTH="10%"> C&DH                      </TD> 
+       <TD WIDTH="80%"> Command and Data Handling </TD>
+  <TR> <TD WIDTH="10%"> CFE                   </TD> 
+       <TD WIDTH="80%"> Core Flight Executive </TD>
+  <TR> <TD WIDTH="10%"> CFS                </TD> 
+       <TD WIDTH="80%"> Core Flight System </TD>
+  <TR> <TD WIDTH="10%"> CI                         </TD> 
+       <TD WIDTH="80%"> CFS Command Ingest Application </TD>
+  <TR> <TD WIDTH="10%"> CMD     </TD> 
+       <TD WIDTH="80%"> Command </TD>
+  <TR> <TD WIDTH="10%"> CPU                     </TD> 
+       <TD WIDTH="80%"> Central Processing Unit </TD>
+  <TR> <TD WIDTH="10%"> ES                     </TD>
+       <TD WIDTH="80%"> CFE Executive Services </TD>
+  <TR> <TD WIDTH="10%"> EVS                </TD> 
+       <TD WIDTH="80%"> CFE Event Services </TD>
+  <TR> <TD WIDTH="10%"> FDS                </TD>
+       <TD WIDTH="80%"> Flight Data System </TD>
+  <TR> <TD WIDTH="10%"> FSW             </TD>
+       <TD WIDTH="80%"> Flight Software </TD>
+  <TR> <TD WIDTH="10%"> GN&C                          </TD> 
+       <TD WIDTH="80%"> Guidance Navigation & Control </TD>
+  <TR> <TD WIDTH="10%"> GSFC                        </TD> 
+       <TD WIDTH="80%"> Goddard Space Flight Center </TD>
+  <TR> <TD WIDTH="10%"> HK           </TD>
+       <TD WIDTH="80%"> Housekeeping </TD>
+  <TR> <TD WIDTH="10%"> HW, H/W  </TD> 
+       <TD WIDTH="80%"> Hardware </TD>
+  <TR> <TD WIDTH="10%"> ICD                        </TD>
+       <TD WIDTH="80%"> Interface Control Document </TD>
+  <TR> <TD WIDTH="10%"> ISR                       </TD>
+       <TD WIDTH="80%"> Interrupt Service Routine </TD>
+  <TR> <TD WIDTH="10%"> JSC                  </TD>
+       <TD WIDTH="80%"> Johnson Space Center </TD>
+  <TR> <TD WIDTH="10%"> OS               </TD>
+       <TD WIDTH="80%"> Operating System </TD>
+  <TR> <TD WIDTH="10%"> OSAL                               </TD>
+       <TD WIDTH="80%"> Operating System Abstraction Layer </TD>
+  <TR> <TD WIDTH="10%"> Pkts    </TD>
+       <TD WIDTH="80%"> Packets </TD>
+  <TR> <TD WIDTH="10%"> RAM                  </TD>
+       <TD WIDTH="80%"> Random-Access Memory </TD>
+  <TR> <TD WIDTH="10%"> RTOS    </TD>
+       <TD WIDTH="80%"> Real Time Operating System </TD>
+  <TR> <TD WIDTH="10%"> SB                        </TD>
+       <TD WIDTH="80%"> CFE Software Bus Services </TD>
+  <TR> <TD WIDTH="10%"> SBC                   </TD>
+       <TD WIDTH="80%"> Single Board Computer </TD>
+  <TR> <TD WIDTH="10%"> SCH     </TD>
+       <TD WIDTH="80%"> CFS Scheduler Application </TD>
+  <TR> <TD WIDTH="10%"> SW, S/W  </TD>
+       <TD WIDTH="80%"> Software </TD>
+  <TR> <TD WIDTH="10%"> TBD                      </TD>
+       <TD WIDTH="80%"> To Be Defined/Determined </TD>
+  <TR> <TD WIDTH="10%"> TBL   </TD>
+       <TD WIDTH="80%"> Table </TD>
+  <TR> <TD WIDTH="10%"> TLM       </TD>
+       <TD WIDTH="80%"> Telemetry </TD>
+  <TR> <TD WIDTH="10%"> TO                               </TD>
+       <TD WIDTH="80%"> CFS Telemetry Output Application </TD>
+  <TR> <TD WIDTH="10%"> UTC                        </TD>
+       <TD WIDTH="80%"> Universal Time Coordinated </TD>
+  </TABLE><BR>
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_opr   </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_intro </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_ovr _TBDAPP_ Overview
+
+  TODO: Describe the software role and functionalities of the _TBDAPP_ application.<BR>
+
+  <BR>
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_reqs </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_ovr  </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_opr _TBDAPP_ Operation
+    
+  The operational interface of the _TBDAPP_ application consists of Ground commands and 
+  Housekeeping telemetry. <BR><BR> The following items detail the operational interface: <BR>
+    
+    <LI> 1. <B>The application version number</B> <BR>
+
+            The application version number is displayed in the 
+            \link #_TBDAPP__INIT_INF_EID \endlink Event message. The Event is of 'informational' 
+            type and is unfiltered by default.<BR>
+
+    <LI> 2. <B>Sending the No-Op command</B> <BR>
+
+            To verify connectivity with the _TBDAPP_ application, the ground can send a 
+            #_TBDAPP__NOOP_CC command. If the packet length field in the command is set to 
+            the value expected by _TBDAPP_, then the command counter will increment, and a 
+            #_TBDAPP__CMD_INF_EID Event message will be sent. This Event message will 
+            also show the version number of the _TBDAPP_ application.<BR>
+
+    <LI> 3. <B>Sending the Reset-Counters command</B> <BR>
+
+            The #_TBDAPP__RESET_CNTRS_CC command will reset only the telemetry items listed here:<BR>
+
+              - #_TBDAPP__HkTlm_t.usCmdCntr    - Number of valid commands received <BR>
+              - #_TBDAPP__HkTlm_t.usCmdErrCntr - Number of invalid commands received <BR>
+              - #_TBDAPP__HkTlm_t.uiExecCntr   - Number of execution cycles <BR><BR>
+
+    <LI> 4. <B>Sending the Housekeeping-Request command</B> <BR>
+
+            The #_TBDAPP__SEND_HK_MID command will trigger _TBDAPP_ to send a Housekeeping telemetry, 
+            #_TBDAPP__HK_TLM_MID .<BR>
+
+    <LI> 5. <B>Monitoring the command counter</B> <BR>
+
+            The #_TBDAPP__HkTlm_t.usCmdCntr telemetry item will increment when the _TBDAPP_ 
+            application receives any valid command. <BR>
+
+    <LI> 6. <B>Monitoring the command error counter</B> <BR>
+
+            The #_TBDAPP__HkTlm_t.usCmdErrCntr telemetry item will increment under the following 
+            conditions:<BR>
+
+              - Unexpected packet length <BR>
+              - Invalid command code <BR>
+              - Invalid command argument <BR>
+
+  <BR>
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_dg  </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_opr </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_reqs _TBDAPP_ Requirements
+    
+  <TABLE BORDER="1" CELLPADDING="2" WIDTH="90%">
+  <TR> <TD WIDTH="20%"> <B>ID</B>          </TD>
+       <TD WIDTH="35%"> <B>Description</B> </TD>
+       <TD WIDTH="35%"> <B>Rationale</B>   </TD>
+  <TR> <TD WIDTH="20%"> TBD ID          </TD>
+       <TD WIDTH="35%"> TBD description </TD>
+       <TD WIDTH="35%"> TBD rationale   </TD>
+  </TABLE> <BR>
+
+  <BR>
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_dd  </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_reqs </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_dg _TBDAPP_ Deployment Guide
+
+  TODO: Include _TBDAPP_ deployment instructions<BR>
+
+  <BR>
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_tlms </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_dd </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_cmds _TBDAPP_ Commands
+      
+  The _TBDAPP_ Application has the following commands:<BR>
+
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_tbls </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_cmds </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_tlms _TBDAPP_ Telemetry
+      
+  The _TBDAPP_ Application has the following telemetry:<BR>
+
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_cfgs </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_tlms </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_tbls _TBDAPP_ Tables
+      
+  The _TBDAPP_ Application has one table called, _TBDTBL_, used for 
+  configuration. This table is accessed during initialization and can
+  be updated by _TBDAPP_ when changes to the table parameters are made 
+  through _TBDAPP_ commands.<BR>
+
+  The _TBDTBL_ table contains default configuration settings. These settings
+  can be adjusted by command. The adjustments will modify the table content
+  and will be reflected if the table is dumped. These adjustments will 
+  also change the table checksum.<BR>
+
+  The _TBDTBL_ table is loaded at the time _TBDAPP_ is started. 
+  _TBDAPP_ does not check for table updates during runtime. The application
+  does not allow the table to be loaded after its initialization.
+  If the operator attempts to do a table load after _TBDAPP_ initializes,
+  they must abort the attemp (via CFE Table Command) or CFE Table Services
+  will be waiting forever to the 'Update" call from _TBDAPP_. If the abort
+  is not executed, the operator will have trouble trying to dump or
+  validate the table.<BR>
+
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_cons </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_tbls </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_cfgs _TBDAPP_ Configuration Parameters
+  
+  The _TBDAPP_ Application has the following configuration parameters:<BR>
+
+  \subpage _tbdApp_missioncfgs
+
+  \subpage _tbdApp_platformcfgs
+
+  <BR>
+**/
+
+/**
+  \page _tbdApp_missioncfgs Mission-specific configuration parameters
+**/
+
+/**
+  \page _tbdApp_platformcfgs Platform-specific configuration parameters
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left" > NEXT: \ref _tbdApp_faqs </TD>
+       <TD WIDTH="20%" ALIGN="right"> PREV: \ref _tbdApp_cfgs </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_cons _TBDAPP_ Constraints
+    
+    <LI> 1. During initialization of CFE Software Bus services, the _TBDAPP_ task will 
+            generate a SysLog or a #_TBDAPP__INIT_ERR_EID Event message, and then terminate if 
+            any of the following steps fail:<BR>
+
+              - Create the Scheduling, Command & Telemetry pipes<BR>
+              - Subscribe to _TBDAPP_ Housekeeping request commands<BR>
+              - Subscribe to _TBDAPP_ Ground command packets<BR>
+              - Subscribe to _TBDAPP_ WakeUp packets<BR>
+
+    <LI> 2. If a pipe read error is encountered from the CFE Software Bus, 
+            the _TBDAPP_ task will send a #_TBDAPP__PIPE_RCVMSG_ERR_EID Event message and 
+            then terminate. <BR><BR>
+
+    <LI> 3. In order to generate housekeeping data, _TBDAPP_ application must receive a 
+            #_TBDAPP__SEND_HK_MID command, which is typically sent from the SCH application, 
+            but can also be sent from the ground. Upon receiving the command, the _TBDAPP_ 
+            application sends out a #_TBDAPP__HK_TLM_MID message.<BR><BR>
+
+    <LI> 4. The _TBDAPP_ Performance IDs must be distinct from other applications' performance 
+            IDs. These IDs are currently defined in _tbdApp__perfids.h. <BR><BR>
+
+    <LI> 5. The _TBDAPP_ command & telemetry message IDs must be distinct from other applications'
+            command & telemetry message IDs. These IDs are currently defined in 
+            _tbdApp__msgids.h. <BR>
+
+  <BR>
+**/
+
+/**
+  <TABLE BORDER="0" CELLPADDING="0" WIDTH="90%">
+  <TR> <TD WIDTH="20%" ALIGN="left"> PREV: \ref _tbdApp_cons </TD>
+  </TABLE> <BR>
+
+  \page _tbdApp_faqs _TBDAPP_ Frequently Asked Questions
+
+  TODO: Include FAQs<BR>
+
+  <BR>
+**/
